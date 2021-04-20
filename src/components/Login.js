@@ -26,11 +26,6 @@ class Login extends React.Component {
   }
 
   handleChange = (event) => {
-    // if (evt.target.name === 'name') {
-    //   setName(evt.target.value)
-    // } else if (evt.target.name === 'surname') {
-    //   setSurname(evt.target.value)
-    // }
     this.setState({
       ...this.state,
       [event.target.name]: {

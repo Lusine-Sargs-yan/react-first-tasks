@@ -1,5 +1,6 @@
 import React from "react";
 import { saveState, loadState } from "../helpers/localStorage.js";
+import "../Counter.css"
 
 class Counter extends React.Component {
   constructor(props) {
@@ -96,12 +97,12 @@ class Counter extends React.Component {
           value={this.state.inputValue}
           placeholder="enter your count"
         />
-        <button onClick={this.addInput}>Add</button>
-        <button onClick={this.increase}>Increase</button>
-        <button disabled={this.state.count <= 0} onClick={this.decrease}>
+        <button onClick={this.addInput} className="add-button">Add</button>
+        <button onClick={this.increase} className="increase-button">Increase</button>
+        <button disabled={this.state.count <= 0} onClick={this.decrease} className="decrease-button">
           Decrease
         </button>
-        <button onClick={this.reset}>Reset</button>
+        <button onClick={this.reset} className="reset-button">Reset</button>
       </div>
     );
   }

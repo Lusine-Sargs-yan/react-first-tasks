@@ -1,6 +1,5 @@
 import React from "react";
 
-
 class DropdownCountries extends React.Component {
   constructor(props) {
     super(props);
@@ -31,18 +30,18 @@ class DropdownCountries extends React.Component {
     fetch(`https://restcountries.eu/rest/v2/name/${this.state.searchValue}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data, 'gggg')
         this.setState({
           data
         });
-
       })
+
+      return this.state.data.filter((name) => name);
   };
 
   render() {
     console.log(this.state.data);
     const {name, flag} = this.state.data;
-    console.log(name, "sss")
+    console.log(name, "name;;;")
     console.log(this.state.data.name, "name::");
     
     return (

@@ -16,7 +16,7 @@ function App() {
       <br />
       <br />
       <br />
-      {/* <DropdownCountries /> */}
+      <DropdownCountries />
     </div>
   );
 }

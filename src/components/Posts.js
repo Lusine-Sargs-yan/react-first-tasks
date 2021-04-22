@@ -1,68 +1,116 @@
 import React from 'react';
+import Post from "./Post"
 
-// class Posts extends React.Component {
-//   contructor(props) {
-//     super(props);
+const BSAE_URL = 'https://jsonplaceholder.typicode.com/posts';
 
-//     this.state = {
-//       postsDate: {
-//         posts: [],
-//         isLoading: true,
-//         checkIds: [],
-//         isChecked: false
-//       }
-//     }
-//   }
-//   componentDidMount() {
-//     this.getPosts();
-//   }
-//   getPosts = () => {
-//     fetch('https://jsonplaceholder.typicode.com/posts')
-//     .then((respose) => response.json())
-//     .then((posts) => {
-//       console.log(posts, "posts:::");
-//       this.setState({ postsDate: { posts: posts, isLoading: false, checkedIds: [ ...this.state.postsData.checkedIds ]} });
-//       localStorage.setItem('posts', JSON.stringify(posts));
+const inputFakeData = [1,2,3,4,5,6,7,8,9];
 
-//     })
-//   }
-//   groupByUserId = () => {
+export class Posts extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			postsData: {
+				posts: [],
+				isLoading: true,
+				checkedIds: [],
+				isChecked: false
+			}
+		}
+	}
 
-//   }
-//   handleCheck = (evnet) => {
-//     let posts = JSON.parse(localStorage.getItem('posts'));
-//     console.log(event.target.id, event.target.checked);
-//     // this.setState({
-//     //   isChecked: !this.state.isChecked
-//     // })
-//     this.setState({...this.state, })
-//   }
+	componentDidMount() {
+		this.getPosts();
+	}
 
-//   render() {
-//     console.log(this.state);
-//     const {postsDate, checkeds} = this.state;
-//     return (
-//       <div>
-//         {posts.isLoading ? <div>Loading...</div> :
-//           <h1> All posts</h1>
-//           User1 <input id="1" onChange={(event)=> this.handleCheck(event)} type="checkbox check={this.state.isChecked}"/><br />
-//           User2 <input id="2" onChange={(event)=> this.handleCheck(event)} type="checkbox"/><br />
-//           User3 <input id="2" onChange={(event)=> this.handleCheck(event)} type="checkbox"/><br />
-//           {postsDate.posts.map((post, index) => {
-//             if(pastData.checkIds.includes(userId))
-//             return (
-//               <div key={index}>
-//               <h3>{posts.title}</h3>
-//               <span>{posts.body}</span>
-//               <span>{posts.userId}</span>
+	getPosts = () => {
+		setTimeout(() => {
+			fetch(BSAE_URL).then((res) => res.json()).then((posts) => {
+				console.log(posts, 'posts');
+				this.setState({ 
+          postsData: { 
+            posts: posts, 
+            isLoading: false,
+            checkedIds: [...this.state.postsData.checkedIds]
+          } 
+        });
+				localStorage.setItem('posts', JSON.stringify(posts));
+			})
+		}, 1000);
+	}
 
-//               </div>
-//             )
-//           })}
-//         }
-//       </div>
-//     )
-//   }
-// }
+  handleCheck = (event) => {
+    console.log(event, 'event, when checked:::');
+    console.log(event.target.id, 'id:::');
+    console.log(event.target.checked, 'checked::::');
+    
+    let dataOfPosts = JSON.parse(localStorage.getItem('posts'));
 
-// export default Posts;
+    if(event.target.checked) {
+      let filteredPosts = dataOfPosts.filter((elem) => {
+        return this.state.postsData.checkedIds.includes(elem.userId.toString() || elem.userId === event.target.id.toString());
+      });
+      this.setState({ 
+        postsData: { 
+          posts: filteredPosts, 
+          isLoading: false,
+          checkedIds: [event.target.id, ...this.state.postsData.checkedIds]
+        } 
+      });
+
+    } else {
+      let filteredPosts2 = dataOfPosts.filter((elem) => elem.userId.toString() !== event.target.id);
+      let newIds = this.state.postsData.checkedIds.filter((item) => item !== event.target.id);
+      this.setState({ 
+        postsData: { 
+          posts: filteredPosts2, 
+          isLoading: false,
+          checkedIds: newIds
+        } 
+      });
+
+    }
+
+  }
+	render() {
+		console.log(this.state);
+		const { postsData } = this.state;
+
+		return (
+			<div>
+				{postsData.isLoading ? <div>Loading ...</div> :
+				<>
+          <h2>Posts</h2>
+          {
+            inputFakeData.map((number) => {
+              return (
+                <div>
+                  <label>
+                  User {number}
+                  <input 
+                  id={number}
+                  type="checkbox"  
+                  onChange={this.handleCheck}
+                  checked={this.state.postsData.isChecked}/>
+                  </label>
+                <br/>
+                </div>
+              )
+            })
+          }
+          {
+            postsData.posts.map(({body, title, userId, id}, index) => {
+              return (
+                <Post key={id} body={body} title={title} userId={userId}/>
+              )
+            })
+          }
+
+				</>
+				}
+			</div>
+		);
+	}
+}
+
+
+export default Posts;

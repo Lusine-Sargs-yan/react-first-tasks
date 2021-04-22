@@ -15,8 +15,8 @@ function App() {
       <Login />
       <br />
       <br />
-      {/* <Posts /> */}
       <br />
+      <Posts />
       <br />
       <br />
       <br />

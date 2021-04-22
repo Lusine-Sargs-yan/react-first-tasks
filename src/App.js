@@ -2,6 +2,7 @@ import React from "react";
 import Counter from "./components/Counter";
 import Login from "./components/Login";
 import DropdownCountries from "./components/DropdownCountries";
+import Posts from "./components/Posts";
 
 function App() {
   return (
@@ -12,6 +13,9 @@ function App() {
       <br />
       <br />
       <Login />
+      <br />
+      <br />
+      {/* <Posts /> */}
       <br />
       <br />
       <br />

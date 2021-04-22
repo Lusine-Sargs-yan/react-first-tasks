@@ -5,19 +5,29 @@ class DropdownCountries extends React.Component {
     super(props);
 
     this.state = {
+      loading: false,
+      error: '',
       data: [],
       searchValue: "",
     };
   }
 
   componentDidMount() {
+    this.setState({
+      loading: true
+    });
+
     fetch("https://restcountries.eu/rest/v2/all")
-      .then((r) => r.json())
+      .then((response) => response.json())
       .then((data) => {
         this.setState({
-          data
+          data,
+          loading: false
         });
       })
+      .catch((err) => {
+        this.setState({error: err.message, loading: false})
+      });
   }
 
   handleSearchUpdate = (event) => {
@@ -26,40 +36,46 @@ class DropdownCountries extends React.Component {
     });
   };
 
-  handleSearch = () => {
-    fetch(`https://restcountries.eu/rest/v2/name/${this.state.searchValue}`)
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          data
-        });
-      })
-
-      return this.state.data.filter((name) => name);
-  };
-
   render() {
-    console.log(this.state.data);
-    const {name, flag} = this.state.data;
-    console.log(name, "name;;;")
-    console.log(this.state.data.name, "name::");
+    console.log(this.state.data.map(({name}) => name), "name:::");
+
+    if(this.state.loading === true) {
+      return (
+        <div>
+          <p>Loading ...</p>
+        </div>
+      )
+    }
+
+    if(this.state.error !== '') {
+      return (
+        <div>
+          <p>{this.state.error}</p>
+        </div>
+      )
+    }
+
+    // Փնտրման գործընթացը իրականցրել եմ միայն առաջին տառի համընկման ժամանակ
+    const filteredNames = !this.state.searchValue ? this.state.data.map(({name}) => name) 
+    : this.state.data.filter(({name}) => name[0] === this.state.searchValue);
+
+    console.log(filteredNames, "filter:::")
     
     return (
       <div>
         <h2>Countries</h2>
-
         <input
           value={this.state.searchValue}
           onChange={(event) => {this.handleSearchUpdate(event)}}
           placeholder="Search Country"
-          onClick={this.handleSearch}
         />
-        <ul>
-          {this.state.data.map(({name, flag}) => (
+          <ul>
+          {Object.values(filteredNames).map(({name, flag}) => (
             <div key={name}>
               <img width="25" alt={name} src={flag} /> {name} 
             </div>
           ))}
+
         </ul>
       </div>
     );
